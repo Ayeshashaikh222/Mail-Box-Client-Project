@@ -1,14 +1,86 @@
 import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../Store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Authentication = () => {
   const [showpassword, setShowPassword] = useState(false);
 
-  const [isLogin, setisLogin] = useState(true);
-  
+  const [isLogin, setIsLogin] = useState(true);
+
   const fullnameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const switchAuthModalHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+
+    const enteredFullName = fullnameInputRef.current.value;
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
+
+    let url;
+
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB3WoU_Kz4oU0npmmPcUAmR5RU01TPol84";
+    }
+
+    if (!isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB3WoU_Kz4oU0npmmPcUAmR5RU01TPol84";
+    }
+
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            console.log("error");
+          });
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        const idToken = data.idToken;
+        const userId = data.email;
+        dispatch(authActions.login({ idToken, userId }));
+        console.log("User has successfully signed in");
+
+        if(isLogin){
+          navigate("/successful");
+        }
+        
+
+        if (!isLogin) {
+          fullnameInputRef.current.value = "";
+        }
+        emailInputRef.current.value = "";
+        passwordInputRef.current.value = "";
+      })
+      .catch((error) => {
+        alert(error, "something went wrong");
+      });
+  };
 
   return (
     <>
@@ -20,7 +92,7 @@ const Authentication = () => {
             {isLogin ? "Welcome Back" : "Get Started"}
           </h2>
           {/* form Conatiner */}
-          <form action="">
+          <form onSubmit={submitHandler}>
             {!isLogin && (
               <div className="flex flex-col mb-4">
                 <label
@@ -85,7 +157,7 @@ const Authentication = () => {
                 <input type="checkbox" />
                 <p className="inline-block text-xs mt-3">
                   I have read and agreed to NestGen's{" "}
-                  <span className="text-brown underline">Terms of Service</span>{" "}
+                  <span className="text-brown underline">Terms of Service</span>
                   and <span className="text-bold">Privacy Policy.</span>
                 </p>
               </div>
@@ -101,7 +173,7 @@ const Authentication = () => {
 
             <div className="flex flex-col mb-4">
               <button
-                type="button"
+                type="sumbit"
                 className="w-full border border-brown-500 bg-brown-500 p-2 text-white rounded mb-3"
               >
                 {isLogin ? "LOGIN" : "SIGN UP"}
@@ -114,13 +186,17 @@ const Authentication = () => {
                 Sign in with Google
               </button>
             </div>
-            <div className="flex gap-2">
-              <p className="text-left text-xs text-blue-900">
+            <div className="flex">
+              <div className="text-left flex space-x-2 text-xs text-blue-900">
                 {isLogin ? "Don't have an account?" : "Already have an account"}
-                <button type="button" className="text-brown">
+                <button
+                  type="button"
+                  className="text-brown"
+                  onClick={switchAuthModalHandler}
+                >
                   {isLogin ? "Sign Up" : "Log In"}
                 </button>
-              </p>
+              </div>
             </div>
           </form>
         </div>
