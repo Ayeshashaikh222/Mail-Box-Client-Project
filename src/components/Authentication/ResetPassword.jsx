@@ -68,9 +68,9 @@ const ResetPassword = () => {
               <button type="submit" className="w-full border border-brown-500 bg-brown-500 p-2 text-white rounded mb-3">RESET PASSWORED</button>
             </div>
 
-            <div className="flex space-x-2 border border-red-500">
-            <p className="text-left text-xs text-blue-900 mr-2">Remember your password?
-            <button type="button" className="text-brown">Login here</button></p>
+            <div className="flex border border-red-500">
+            <div className="text-left flex gap-2 text-xs text-blue-900 mr-2">Remember your password?
+            <button type="button" className="text-brown">Login here</button></div>
             </div>
           </form>  
         </div>

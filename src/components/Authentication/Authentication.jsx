@@ -8,9 +8,9 @@ const Authentication = () => {
 
   const [isLogin, setIsLogin] = useState(true);
 
-  const fullnameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const confirmPasswordInputRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -23,9 +23,9 @@ const Authentication = () => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    const enteredFullName = fullnameInputRef.current.value;
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    const enteredconfirmPassword = !isLogin ? confirmPasswordInputRef.current.value : null;
 
     let url;
 
@@ -66,16 +66,16 @@ const Authentication = () => {
         dispatch(authActions.login({ idToken, userId }));
         console.log("User has successfully signed in");
 
-        if(isLogin){
+        if (isLogin) {
           navigate("/successful");
-        }
-        
-
-        if (!isLogin) {
-          fullnameInputRef.current.value = "";
         }
         emailInputRef.current.value = "";
         passwordInputRef.current.value = "";
+
+        if (!isLogin) {
+          confirmPasswordInputRef.current.value = "";
+        }
+
       })
       .catch((error) => {
         alert(error, "something went wrong");
@@ -93,25 +93,6 @@ const Authentication = () => {
           </h2>
           {/* form Conatiner */}
           <form onSubmit={submitHandler}>
-            {!isLogin && (
-              <div className="flex flex-col mb-4">
-                <label
-                  htmlFor="fullname"
-                  className="text-left text-blue-900 text-xs mb-2"
-                >
-                  FULL NAME:
-                </label>
-                <input
-                  type="text"
-                  className=" w-full p-2 border text-brown border-brown-500 rounded"
-                  id="fullname"
-                  required
-                  placeholder="Enter full name"
-                  ref={fullnameInputRef}
-                />
-              </div>
-            )}
-
             <div className="flex flex-col mb-4">
               <label
                 htmlFor="email"
@@ -153,10 +134,29 @@ const Authentication = () => {
             </div>
 
             {!isLogin && (
+              <div className="flex flex-col mb-4">
+                <label
+                  htmlFor="confirmpassword"
+                  className="text-left text-blue-900 text-xs mb-2"
+                >
+                  CONFIRM PASSWORD:
+                </label>
+                <input
+                  type="password"
+                  className=" w-full p-2 border text-brown border-brown-500 rounded"
+                  id="confirmpassword"
+                  required
+                  placeholder="Confirm password"
+                  ref={confirmPasswordInputRef}
+                />
+              </div>
+            )}
+
+            {!isLogin && (
               <div className="flex mb-4">
                 <input type="checkbox" />
                 <p className="inline-block text-xs mt-3">
-                  I have read and agreed to NestGen's{" "}
+                  I have read and agreed to NestGen's
                   <span className="text-brown underline">Terms of Service</span>
                   and <span className="text-bold">Privacy Policy.</span>
                 </p>
@@ -187,7 +187,7 @@ const Authentication = () => {
               </button>
             </div>
             <div className="flex">
-              <div className="text-left flex space-x-2 text-xs text-blue-900">
+              <div className="text-left flex gap-2 text-xs text-blue-900">
                 {isLogin ? "Don't have an account?" : "Already have an account"}
                 <button
                   type="button"

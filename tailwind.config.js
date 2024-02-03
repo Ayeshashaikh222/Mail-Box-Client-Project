@@ -15,6 +15,7 @@ export default {
       backgroundColor: {
         'brown-500': '#8B4513'
       },
+      
     },
   },
   plugins: [],
