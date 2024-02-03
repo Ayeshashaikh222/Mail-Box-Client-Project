@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Home from "./Pages/Home";
 
+
 function App() {
   const isLoggedIn = useSelector((state) => state.authentication.isLoggedIn);
 
