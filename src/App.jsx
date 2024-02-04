@@ -5,6 +5,7 @@ import Successful from "./Pages/Successful";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Home from "./Pages/Home";
+import Inbox from "./components/Inbox";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <>
          <Route path="/successful" element={<Successful />} />
          <Route  path="/home" element={<Home />}/>
+         
       </>)}
       
       
