@@ -107,6 +107,7 @@ function sentBox() {
     console.log(showSent);
     console.log(selectedEmail);
   };
+  // onClick={sentEmailClickHandler(item)}
 
   return (
     <>
@@ -116,7 +117,6 @@ function sentBox() {
             <li
               key={item.id}
               className="bg-white m-2 p-2 rounded hover:bg-slate-200"
-              onClick={sentEmailClickHandler(item)}
             >
               {item.email} - {item.subject}
               <button
@@ -147,9 +147,9 @@ function sentBox() {
         </ul>
       )}
 
-      {!showSent && selectedEmail && (
+      {/* {!showSent && selectedEmail && (
         <SentEmailDetails resetsentBox={resetsentBox} email={selectedEmail} />
-      )}
+      )} */}
     </>
   );
 }

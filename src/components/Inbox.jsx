@@ -12,8 +12,6 @@ function Inbox() {
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
 
-  
-
   const inboxDataHandler = () => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
@@ -68,6 +66,7 @@ function Inbox() {
     console.log(showInbox);
     console.log(selectedEmail);
   };
+  // onClick={inboxEmailClickHandler(item)
 
   return (
     <>
@@ -77,9 +76,8 @@ function Inbox() {
             <li
               key={item.id}
               className="bg-white m-2 p-2  rounded hover:bg-slate-200"
-              onClick={inboxEmailClickHandler(item)}
             >
-              {item.email}  -  {item.subject}
+              {item.email} - {item.subject}
               <button className="float-right text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
