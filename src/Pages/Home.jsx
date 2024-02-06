@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Header from "../Layout/Header";
 import { Link } from "react-router-dom";
 import ComposeModal from "../Layout/ComposeModal";
@@ -8,16 +8,16 @@ import SentBox from "../components/SentBox";
 const Home = () => {
   const [showInbox, setShowInbox] = useState(false);
   const [showSent, setShowSent] = useState(false);
-  
 
-  const toggleInbox = () => {
-    setShowInbox((prevstate) => !prevstate);
+  const handleInboxClick = () => {
+    setShowInbox(true);
+    setShowSent(false);
   };
 
-  const toggleSent = () => {
-    setShowSent((prevstate) => !prevstate);
+  const handleSentClick = () => {
+    setShowInbox(false);
+    setShowSent(true);
   };
-
 
   return (
     <div className="h-screen">
@@ -46,7 +46,7 @@ const Home = () => {
               </svg>
             </div>
             <span>
-              <Link to="" className="ml-2" onClick={toggleInbox}>
+              <Link to="" className="ml-2" onClick={handleInboxClick}>
                 Inbox
               </Link>
             </span>
@@ -89,13 +89,14 @@ const Home = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide lucide-mouse-pointer-2"
+                className="lucide lucide-send"
               >
-                <path d="m4 4 7.07 17 2.51-7.39L21 11.07z" />
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
               </svg>
             </div>
             <span>
-              <Link to="" className="ml-2" onClick={toggleSent}>
+              <Link to="" className="ml-2" onClick={handleSentClick}>
                 Sent
               </Link>
             </span>
@@ -157,10 +158,8 @@ const Home = () => {
           </div>
         </div>
         <div className="bg-slate-200 h-full m-2 w-10/12 rounded">
-          
-          { showInbox && <Inbox /> }
-          { showSent && <SentBox />}
-
+          {showInbox && <Inbox />}
+          {showSent && <SentBox />}
         </div>
       </div>
     </div>

@@ -1,16 +1,115 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
+import { useSelector } from "react-redux";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 function ComposeModal() {
+  const userEmail = useSelector((state) => state.authentication.userId);
+  const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
+
   const [showModal, setShowModal] = React.useState(false);
+
+  const emailInputRef = useRef();
+
+  const subjectInputRef = useRef();
+
   const [editorState, setEditorState] = React.useState(() =>
     EditorState.createEmpty()
   );
 
   const EditorStateChangeHandler = (e) => {
     setEditorState(e);
+  };
+
+  let enteredEmail = emailInputRef?.current?.value;
+  enteredEmail = enteredEmail?.replace(/[^a-zA-Z0-9]/g, "");
+  const enteredSubject = subjectInputRef?.current?.value;
+
+  const data = {
+    email: enteredEmail,
+    subject: enteredSubject,
+    editor: editorState.getCurrentContent().getPlainText(),
+  };
+
+  const submitHandler = () => {
+    inboxDataHandler();
+    sentDataHandler();
+    setShowModal(false);
+  };
+
+  const inboxDataHandler = () => {
+    fetch(
+      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${enteredEmail}.json`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      if (res.ok) {
+        console.log("successfully sent the email");
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Successfully sent email",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return res.json();
+      } else {
+        return res.json().then((data) => {
+          console.log("something went wrong ");
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "something went wrong",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+      }
+    });
+  };
+
+  const sentDataHandler = () => {
+    fetch(
+      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      if (res.ok) {
+        console.log("Successfully sent email");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Successfully sent email",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        res.json();
+      } else {
+        return res.json().then((data) => {
+          console.log("something went wrong");
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "something went wrong",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+      }
+    });
   };
 
   return (
@@ -44,16 +143,54 @@ function ComposeModal() {
               {/* {/content/} */}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full  bg-white outline-none focus:outline-none">
                 {/* {/header/} */}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">New Message</h3>
+                <div className="flex items-start justify-between p-2 ml-2 border-b border-solid border-blueGray-200 rounded-t">
+                  <h3 className="text-sm mt-2 font-semibold">New Message</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
+                    <span className="text-black">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-x"
+                      >
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                      </svg>
                     </span>
                   </button>
+                </div>
+                <div className=" ml-4 border-b p-2 border-solid border-blueGray-200 rounded-t">
+                  <label htmlFor="to" className="">
+                    To:
+                  </label>
+                  <input
+                    type="email"
+                    id="to"
+                    required
+                    className="ml-2 border border-none focus:outline-none border-transparent"
+                    ref={emailInputRef}
+                  />
+                </div>
+                <div className=" ml-4 border-b p-2 border-solid border-blueGray-200 rounded-t">
+                  <label htmlFor="subject" className="">
+                    Subject:
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    required
+                    className="ml-2 border border-none focus:outline-none border-transparent"
+                    ref={subjectInputRef}
+                  />
                 </div>
                 {/* {/body/} */}
                 <div className="relative p-6 flex-auto">
@@ -74,7 +211,7 @@ function ComposeModal() {
                   <button
                     className="bg-blue-800 text-white active:bg-blue-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={submitHandler}
                   >
                     Save Changes
                   </button>

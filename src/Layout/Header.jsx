@@ -1,4 +1,10 @@
+import { useDispatch } from "react-redux";
+import { authActions } from "../Store/authSlice";
+
+
 const Header = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className="flex min-w-screen justify-between p-4 bg-slate-100 rounded">
@@ -7,7 +13,7 @@ const Header = () => {
         </div>
 
         <div className="flex flex-col gap-1 items-center">
-          <button className="text-brown">
+          <button className="text-brown"  onClick={() => {dispatch(authActions.logout())}}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -25,7 +31,10 @@ const Header = () => {
               <line x1="21" x2="9" y1="12" y2="12" />
             </svg>
           </button>
-          <span className="text-brown font-semibold">Log Out</span>
+          <span
+            className="text-brown font-semibold">
+            Log Out
+          </span>
         </div>
       </div>
     </>
