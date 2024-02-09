@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
 import { useSelector } from "react-redux";
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 function ComposeModal() {
   const userEmail = useSelector((state) => state.authentication.userId);
@@ -15,6 +15,8 @@ function ComposeModal() {
   const emailInputRef = useRef();
 
   const subjectInputRef = useRef();
+
+  // const [viewed, setViewed] = useState(false);
 
   const [editorState, setEditorState] = React.useState(() =>
     EditorState.createEmpty()
@@ -32,6 +34,7 @@ function ComposeModal() {
     email: enteredEmail,
     subject: enteredSubject,
     editor: editorState.getCurrentContent().getPlainText(),
+    // viewed: viewed,
   };
 
   const submitHandler = () => {

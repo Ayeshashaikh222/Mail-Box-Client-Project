@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import InboxEmailDetails from "./InboxEmailDetails";
 
-function Inbox() {
+function Inbox({ setInboxCount }) {
   const [inboxData, setInboxData] = useState([]);
   const [showInbox, setShowInbox] = useState(true);
-  const [selectedEmail, setSelectedEmail] = useState(null);
 
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
@@ -36,16 +35,14 @@ function Inbox() {
             email: data[key].email,
             subject: data[key].subject,
             editor: data[key].editor,
+            viewed: data[key].viewed || false,
           });
         }
         console.log(fetchedInboxdata);
         setInboxData(fetchedInboxdata);
+        setInboxCount(fetchedInboxdata.length);
       });
   };
-
-  //   setInterval(() => {
-  //     inboxDataHandler();
-  //  }, 2000);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -55,18 +52,13 @@ function Inbox() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const inboxEmailClickHandler = (item) => {
-    setSelectedEmail(item);
-    setShowInbox(false);
+  const itemClickHandler = (id) => {
+    const updatedInboxData = inboxData.map((item) =>
+      item.id === id ? { ...item, viewed: true } : item
+    );
+    setInboxData(updatedInboxData);
+    setInboxCount((prevCount) => prevCount - 1);
   };
-
-  const resetInbox = () => {
-    setShowInbox(true);
-    setSelectedEmail(null);
-    console.log(showInbox);
-    console.log(selectedEmail);
-  };
-  // onClick={inboxEmailClickHandler(item)
 
   return (
     <>
@@ -75,9 +67,13 @@ function Inbox() {
           {inboxData.map((item) => (
             <li
               key={item.id}
-              className="bg-white m-2 p-2  rounded hover:bg-slate-200"
+              className={`bg-white m-2 p-2  rounded hover:bg-slate-200 ${
+                item.viewed ? "text-gray-500 font-normal" : "font-bold"
+              } `}
             >
-              {item.email} - {item.subject}
+              <Link to={`/inboxmessage/${item.id}`}>
+                {item.email} - {item.subject}
+              </Link>
               <button className="float-right text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -102,10 +98,6 @@ function Inbox() {
           ))}
         </ul>
       )}
-
-      {/* {!showInbox && selectedEmail && (
-        <InboxEmailDetails resetInbox={resetInbox} email={selectedEmail} />
-      )} */}
     </>
   );
 }

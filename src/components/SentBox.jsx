@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import SentEmailDetails from "./SentEmailDetails";
 
 function sentBox() {
   const [sentData, setSentData] = useState([]);
   const [showSent, setShowsSent] = useState(true);
-  const [selectedEmail, setSelectedEmail] = useState(null);
 
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
@@ -96,19 +95,6 @@ function sentBox() {
     fetchsentDataHandler();
   }, []);
 
-  const sentEmailClickHandler = (item) => {
-    setSelectedEmail(item);
-    setShowsSent(false);
-  };
-
-  const resetsentBox = () => {
-    setShowsSent(true);
-    setSelectedEmail(null);
-    console.log(showSent);
-    console.log(selectedEmail);
-  };
-  // onClick={sentEmailClickHandler(item)}
-
   return (
     <>
       {showSent && (
@@ -118,7 +104,9 @@ function sentBox() {
               key={item.id}
               className="bg-white m-2 p-2 rounded hover:bg-slate-200"
             >
-              {item.email} - {item.subject}
+              <Link to={`/sentmessage/${item.id}`}>
+                {item.email} - {item.subject}
+              </Link>
               <button
                 className="float-right text-gray-500"
                 onClick={() => deleteSentDataHandler(item.id)}
@@ -146,10 +134,6 @@ function sentBox() {
           ))}
         </ul>
       )}
-
-      {/* {!showSent && selectedEmail && (
-        <SentEmailDetails resetsentBox={resetsentBox} email={selectedEmail} />
-      )} */}
     </>
   );
 }

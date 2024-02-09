@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Header from "../Layout/Header";
-import { Link } from "react-router-dom";
-import ComposeModal from "../Layout/ComposeModal";
 import Inbox from "../components/Inbox";
 import SentBox from "../components/SentBox";
+import { Link } from "react-router-dom";
+import ComposeModal from "../Layout/ComposeModal";
 
 const Home = () => {
   const [showInbox, setShowInbox] = useState(false);
   const [showSent, setShowSent] = useState(false);
+  const [inboxcount, setInboxCount] = useState(0);
 
   const handleInboxClick = () => {
     setShowInbox(true);
@@ -47,7 +48,7 @@ const Home = () => {
             </div>
             <span>
               <Link to="" className="ml-2" onClick={handleInboxClick}>
-                Inbox
+                Inbox <span className="ml-10">{inboxcount}</span>
               </Link>
             </span>
           </div>
@@ -89,10 +90,9 @@ const Home = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide lucide-send"
+                className="lucide lucide-mouse-pointer-2"
               >
-                <path d="m22 2-7 20-4-9-9-4Z" />
-                <path d="M22 2 11 13" />
+                <path d="m4 4 7.07 17 2.51-7.39L21 11.07z" />
               </svg>
             </div>
             <span>
@@ -158,7 +158,7 @@ const Home = () => {
           </div>
         </div>
         <div className="bg-slate-200 h-full m-2 w-10/12 rounded">
-          {showInbox && <Inbox />}
+          {showInbox && <Inbox setInboxCount={setInboxCount} />}
           {showSent && <SentBox />}
         </div>
       </div>

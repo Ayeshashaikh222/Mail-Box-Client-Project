@@ -1,29 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-function InboxEmailDetails({ email, resetInbox }) {
+function InboxEmailDetails() {
+  const [inboxdata, setinboxData] = useState([]);
+
+  const userEmail = useSelector((state) => state.authentication.userId);
+  const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
+
+  const { Id } = useParams();
+
+  const inboxEmailMessage = async () => {
+    try {
+      const response = await fetch(
+        `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
+      );
+      const data = await response.json();
+      const fetchedInboxData = [];
+      for (const key in data) {
+        fetchedInboxData.push({
+          id: key,
+          email: data[key].email,
+          subject: data[key].subject,
+          editor: data[key].editor,
+        });
+      }
+      setinboxData(fetchedInboxData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    inboxEmailMessage();
+  }, []);
+
+  const inboxData = inboxdata.find((item) => item.id === Id);
+
   return (
     <>
       <div className="flex flex-col bg-white m-2 p-2 h-[100%] rounded">
-        <div>
-          <button onClick={resetInbox}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-arrow-left"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
-          </button>
-        </div>
-        <h1 className="m-2 ml-10 mb-6 p-2 text-2xl">{email.subject}</h1>
+        <h1 className="m-2 ml-10 mb-6 p-2 text-2xl">{inboxData?.subject}</h1>
         <div className="flex text-lg">
           <span>
             <svg
@@ -43,9 +60,9 @@ function InboxEmailDetails({ email, resetInbox }) {
               <circle cx="12" cy="12" r="10" />
             </svg>
           </span>
-          <span className=" ml-2">{email.email}</span>
+          <span className=" ml-2">{inboxData?.email}</span>
         </div>
-        <div className="m-4 ml-4 p-6">{email.editor}</div>
+        <div className="m-4 ml-4 p-6">{inboxData?.editor}</div>
       </div>
     </>
   );
