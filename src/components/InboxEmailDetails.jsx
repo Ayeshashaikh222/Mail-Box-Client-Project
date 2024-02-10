@@ -34,14 +34,14 @@ function InboxEmailDetails() {
 
   const markEmailAsViewed = async () => {
     try {
-      const emailToUpdate = inboxData.find((item) => item.id === Id);
-      emailToUpdate.viewed = true;
+      const unreademailcount = inboxdata;
+      unreademailcount.viewed = true;
 
       fetch(
         `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${Id}.json`,
         {
           method: "PUT",
-          body: JSON.stringify(emailToUpdate),
+          body: JSON.stringify(unreademailcount),
           headers: {
             "Content-Type": "application/json",
           },

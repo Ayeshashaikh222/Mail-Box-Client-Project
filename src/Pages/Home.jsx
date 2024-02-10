@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { HomeActions } from "../Store/HomeSlice";
 
 const Home = () => {
-  //  const [inboxcount, setInboxCount] = useState(0);
-  const [unViewedEmailCount, setUnViewedEmailCount] = useState(0);
+  // const [unViewedEmailCount, setUnViewedEmailCount] = useState(0);
 
   const showinbox = useSelector((state) => state.home.showInbox);
   const showsent = useSelector((state) => state.home.showSent);
+
+  const inboxCount = useSelector((state) => state.home.inboxCount);
 
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
@@ -36,15 +37,15 @@ const Home = () => {
           `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
         );
         const data = await response.json();
-        let unreademailcount = 0;
+        // let unreademailcount = 0;
 
-        for (const key in data) {
-          if (!data[key].viewed) {
-            unreademailcount++;
-          }
-        }
+        // for (const key in data) {
+        //   if (!data[key].viewed) {
+        //     unreademailcount++;
+        //   }
+        // }
 
-        setUnViewedEmailCount(unreademailcount);
+        // setUnViewedEmailCount(unreademailcount);
       } catch (error) {
         console.log(error);
       }
@@ -81,7 +82,7 @@ const Home = () => {
             </div>
             <span>
               <Link to="" className="ml-2" onClick={handleInboxClick}>
-                Inbox <span className="ml-10">{unViewedEmailCount}</span>
+                Inbox <span className="ml-10">{inboxCount}</span>
               </Link>
             </span>
           </div>

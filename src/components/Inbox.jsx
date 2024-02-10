@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { HomeActions } from "../Store/HomeSlice";
 
 function Inbox({ setInboxCount }) {
   const [inboxData, setInboxData] = useState([]);
   const [showInbox, setShowInbox] = useState(true);
+
+  const dispatch = useDispatch();
 
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
@@ -38,6 +41,15 @@ function Inbox({ setInboxCount }) {
             viewed: data[key].viewed || false,
           });
         }
+        let unreademailcount = 0;
+
+        for (const key in data) {
+          if (!data[key].viewed) {
+            unreademailcount++;
+          }
+        }
+
+        dispatch(HomeActions.setInboxCount(unreademailcount));
         console.log(fetchedInboxdata);
         setInboxData(fetchedInboxdata);
         // const unViewedData = inboxData.filter(

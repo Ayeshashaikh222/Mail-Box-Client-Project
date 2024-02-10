@@ -14,6 +14,9 @@ const HomeSlice = createSlice({
     setShowSent(state, action) {
       state.showSent = action.payload;
     },
+    setInboxCount(state, action) {
+      state.inboxCount = action.payload;
+    },
   },
 });
 
