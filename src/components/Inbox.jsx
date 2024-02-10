@@ -40,7 +40,10 @@ function Inbox({ setInboxCount }) {
         }
         console.log(fetchedInboxdata);
         setInboxData(fetchedInboxdata);
-        setInboxCount(fetchedInboxdata.length);
+        // const unViewedData = inboxData.filter(
+        //   (prevState) => prevState.viewed === false
+        // );
+        // setInboxCount(unViewedData.length);
       });
   };
 
@@ -51,14 +54,6 @@ function Inbox({ setInboxCount }) {
 
     return () => clearInterval(intervalId);
   }, []);
-
-  const itemClickHandler = (id) => {
-    const updatedInboxData = inboxData.map((item) =>
-      item.id === id ? { ...item, viewed: true } : item
-    );
-    setInboxData(updatedInboxData);
-    setInboxCount((prevCount) => prevCount - 1);
-  };
 
   return (
     <>

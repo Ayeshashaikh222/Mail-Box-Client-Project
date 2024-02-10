@@ -1,24 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Layout/Header";
 import Inbox from "../components/Inbox";
 import SentBox from "../components/SentBox";
 import { Link } from "react-router-dom";
 import ComposeModal from "../Layout/ComposeModal";
+import { useDispatch, useSelector } from "react-redux";
+import { HomeActions } from "../Store/HomeSlice";
 
 const Home = () => {
-  const [showInbox, setShowInbox] = useState(false);
-  const [showSent, setShowSent] = useState(false);
-  const [inboxcount, setInboxCount] = useState(0);
+  //  const [inboxcount, setInboxCount] = useState(0);
+  const [unViewedEmailCount, setUnViewedEmailCount] = useState(0);
+
+  const showinbox = useSelector((state) => state.home.showInbox);
+  const showsent = useSelector((state) => state.home.showSent);
+
+  const userEmail = useSelector((state) => state.authentication.userId);
+  const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
+
+  const dispatch = useDispatch();
 
   const handleInboxClick = () => {
-    setShowInbox(true);
-    setShowSent(false);
+    dispatch(HomeActions.setShowInbox(true));
+    dispatch(HomeActions.setShowSent(false));
   };
 
   const handleSentClick = () => {
-    setShowInbox(false);
-    setShowSent(true);
+    dispatch(HomeActions.setShowInbox(false));
+    dispatch(HomeActions.setShowSent(true));
   };
+
+  useEffect(() => {
+    const fetchUnViewedEmailCount = async () => {
+      try {
+        const response = await fetch(
+          `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
+        );
+        const data = await response.json();
+        let unreademailcount = 0;
+
+        for (const key in data) {
+          if (!data[key].viewed) {
+            unreademailcount++;
+          }
+        }
+
+        setUnViewedEmailCount(unreademailcount);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUnViewedEmailCount();
+  }, [email]);
 
   return (
     <div className="h-screen">
@@ -48,7 +81,7 @@ const Home = () => {
             </div>
             <span>
               <Link to="" className="ml-2" onClick={handleInboxClick}>
-                Inbox <span className="ml-10">{inboxcount}</span>
+                Inbox <span className="ml-10">{unViewedEmailCount}</span>
               </Link>
             </span>
           </div>
@@ -158,12 +191,13 @@ const Home = () => {
           </div>
         </div>
         <div className="bg-slate-200 h-full m-2 w-10/12 rounded">
-          {showInbox && <Inbox setInboxCount={setInboxCount} />}
-          {showSent && <SentBox />}
+          {showinbox && <Inbox />}
+          {showsent && <SentBox />}
         </div>
       </div>
     </div>
   );
 };
+// setInboxCount={setInboxCount}
 
 export default Home;

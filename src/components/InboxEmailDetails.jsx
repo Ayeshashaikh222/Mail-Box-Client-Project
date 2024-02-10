@@ -23,6 +23,7 @@ function InboxEmailDetails() {
           email: data[key].email,
           subject: data[key].subject,
           editor: data[key].editor,
+          viewed: data[key].viewed,
         });
       }
       setinboxData(fetchedInboxData);
@@ -31,11 +32,37 @@ function InboxEmailDetails() {
     }
   };
 
+  const markEmailAsViewed = async () => {
+    try {
+      const emailToUpdate = inboxData.find((item) => item.id === Id);
+      emailToUpdate.viewed = true;
+
+      fetch(
+        `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${Id}.json`,
+        {
+          method: "PUT",
+          body: JSON.stringify(emailToUpdate),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating viewed status:", error);
+    }
+  };
+
   useEffect(() => {
     inboxEmailMessage();
   }, []);
 
   const inboxData = inboxdata.find((item) => item.id === Id);
+
+  useEffect(() => {
+    if (inboxData && !inboxData.viewed) {
+      markEmailAsViewed();
+    }
+  }, [inboxData]);
 
   return (
     <>
