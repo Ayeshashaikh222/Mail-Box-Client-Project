@@ -18,24 +18,10 @@ function sentBox() {
       .then((res) => {
         if (res.ok) {
           console.log("successfully fetched sent email");
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Successfully fetched sent email",
-            showConfirmButton: false,
-            timer: 1500,
-          });
           return res.json();
         } else {
           return res.json().then((data) => {
             console.log("failed to fetch the sent email");
-            Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: "Failed to fetch the sent email",
-              showConfirmButton: false,
-              timer: 1500,
-            });
           });
         }
       })
@@ -63,7 +49,7 @@ function sentBox() {
       }
     ).then((res) => {
       if (res.ok) {
-        console.log("successfully sent the email");
+        console.log("successfully deleted the email");
         setSentData((prevState) =>
           prevState.filter((item) => item.id !== itemId)
         );
@@ -80,7 +66,7 @@ function sentBox() {
         return res.json().then((data) => {
           console.log("Failed to delete the sent email ");
           Swal.fire({
-            position: "top-end",
+            position: "top-center",
             icon: "error",
             title: "Failed to delete the sent email",
             showConfirmButton: false,

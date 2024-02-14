@@ -8,6 +8,8 @@ const Authentication = () => {
 
   const [isLogin, setIsLogin] = useState(true);
 
+  const [passwordValid, setPasswordValid] = useState(false);
+
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const confirmPasswordInputRef = useRef();
@@ -25,7 +27,14 @@ const Authentication = () => {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-    const enteredconfirmPassword = !isLogin ? confirmPasswordInputRef.current.value : null;
+    const enteredconfirmPassword = !isLogin
+      ? confirmPasswordInputRef.current.value
+      : null;
+
+    if (enteredPassword.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    }
 
     let url;
 
@@ -75,11 +84,15 @@ const Authentication = () => {
         if (!isLogin) {
           confirmPasswordInputRef.current.value = "";
         }
-
       })
       .catch((error) => {
         alert(error, "something went wrong");
       });
+  };
+
+  const validatePassword = () => {
+    const enteredPassword = passwordInputRef.current.value;
+    setPasswordValid(enteredPassword.length >= 6);
   };
 
   return (
@@ -124,6 +137,7 @@ const Authentication = () => {
                   className=" w-full p-2 border text-brown border-brown-500 rounded"
                   placeholder="Create a Password"
                   ref={passwordInputRef}
+                  onInput={validatePassword}
                 />
                 <button
                   type="button"
@@ -174,7 +188,9 @@ const Authentication = () => {
             <div className="flex flex-col mb-4">
               <button
                 type="sumbit"
-                className="w-full border border-brown-500 bg-brown-500 p-2 text-white rounded mb-3"
+                className={`w-full border border-brown-500 bg-brown-500 p-2 text-white rounded mb-3
+                 ${!passwordValid && "opacity-50 cursor-not-allowed"}`}
+                disabled={!passwordValid}
               >
                 {isLogin ? "LOGIN" : "SIGN UP"}
               </button>

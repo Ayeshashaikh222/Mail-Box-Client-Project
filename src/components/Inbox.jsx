@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { HomeActions } from "../Store/HomeSlice";
 
-function Inbox({ setInboxCount }) {
+function Inbox() {
   const [inboxData, setInboxData] = useState([]);
   const [showInbox, setShowInbox] = useState(true);
 
@@ -14,7 +14,7 @@ function Inbox({ setInboxCount }) {
   const userEmail = useSelector((state) => state.authentication.userId);
   const email = userEmail.replace(/[^a-zA-Z0-9]/g, "");
 
-  const inboxDataHandler = () => {
+  const fetchInboxDataHandler = () => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
     )
@@ -52,16 +52,47 @@ function Inbox({ setInboxCount }) {
         dispatch(HomeActions.setInboxCount(unreademailcount));
         console.log(fetchedInboxdata);
         setInboxData(fetchedInboxdata);
-        // const unViewedData = inboxData.filter(
-        //   (prevState) => prevState.viewed === false
-        // );
-        // setInboxCount(unViewedData.length);
       });
+  };
+
+  const deleteInboxDataHandler = (itemId) => {
+    fetch(
+      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${itemId}.json`,
+      {
+        method: "DELETE",
+      }
+    ).then((res) => {
+      if (res.ok) {
+        console.log("successfully sent the email");
+        setInboxData((prevState) =>
+          prevState.filter((item) => item.id !== itemId)
+        );
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "successfully deleted the sent email",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return res.json();
+      } else {
+        return res.json().then((data) => {
+          console.log("Failed to delete the inbox email ");
+          Swal.fire({
+            position: "top-center",
+            icon: "error",
+            title: "Failed to delete the inbox email",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+      }
+    });
   };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      inboxDataHandler();
+      fetchInboxDataHandler();
     }, 2000);
 
     return () => clearInterval(intervalId);
@@ -81,7 +112,10 @@ function Inbox({ setInboxCount }) {
               <Link to={`/inboxmessage/${item.id}`}>
                 {item.email} - {item.subject}
               </Link>
-              <button className="float-right text-gray-500">
+              <button
+                className="float-right text-gray-500"
+                onClick={() => deleteInboxDataHandler(item.id)}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

@@ -27,6 +27,7 @@ function InboxEmailDetails() {
         });
       }
       setinboxData(fetchedInboxData);
+      console.log(fetchedInboxData);
     } catch (error) {
       console.log(error);
     }
@@ -34,8 +35,7 @@ function InboxEmailDetails() {
 
   const markEmailAsViewed = async () => {
     try {
-      const unreademailcount = inboxdata;
-      unreademailcount.viewed = true;
+      const unreademailcount = { ...inboxData, viewed: true };
 
       fetch(
         `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${Id}.json`,
@@ -47,6 +47,7 @@ function InboxEmailDetails() {
           },
         }
       );
+      console.log(unreademailcount);
     } catch (error) {
       console.error("Error updating viewed status:", error);
     }

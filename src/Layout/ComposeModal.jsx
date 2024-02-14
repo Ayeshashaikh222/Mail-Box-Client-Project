@@ -3,7 +3,6 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
 import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 function ComposeModal() {
@@ -16,8 +15,6 @@ function ComposeModal() {
 
   const subjectInputRef = useRef();
 
-  // const [viewed, setViewed] = useState(false);
-
   const [editorState, setEditorState] = React.useState(() =>
     EditorState.createEmpty()
   );
@@ -26,24 +23,58 @@ function ComposeModal() {
     setEditorState(e);
   };
 
-  let enteredEmail = emailInputRef?.current?.value;
-  enteredEmail = enteredEmail?.replace(/[^a-zA-Z0-9]/g, "");
-  const enteredSubject = subjectInputRef?.current?.value;
+  // let enteredEmail = emailInputRef?.current?.value;
+  // enteredEmail = enteredEmail?.replace(/[^a-zA-Z0-9]/g, "");
+  // const enteredSubject = subjectInputRef?.current?.value;
 
-  const data = {
-    email: enteredEmail,
-    subject: enteredSubject,
-    editor: editorState.getCurrentContent().getPlainText(),
-    // viewed: viewed,
-  };
+  // const data = {
+  //   email: enteredEmail,
+  //   subject: enteredSubject,
+  //   editor: editorState.getCurrentContent().getPlainText(),
+  // };
 
   const submitHandler = () => {
-    inboxDataHandler();
-    sentDataHandler();
+    // const editorContent = editorState.getCurrentContent().getPlainText();
+    // const wordCount = editorContent.split(/\s+/).length;
+    // if (wordCount < 10) {
+    //   alert("Please enter at least 10 words in the editor field.");
+    //   return;
+    // }
+
+    // const data = {
+    //   email: enteredEmail,
+    //   subject: enteredSubject,
+    //   editor: editorState.getCurrentContent().getPlainText(),
+    // };
+
+    // inboxDataHandler();
+    // sentDataHandler();
+    // setShowModal(false);
+
+    const editorContent = editorState.getCurrentContent().getPlainText();
+    const wordCount = editorContent.split(/\s+/).length;
+
+    // Check if the word count is less than 10
+    if (wordCount < 10) {
+      alert("Please enter at least 10 words in the editor field.");
+      return;
+    }
+
+    const enteredEmail = emailInputRef?.current?.value;
+    const enteredSubject = subjectInputRef?.current?.value;
+
+    const data = {
+      email: enteredEmail,
+      subject: enteredSubject,
+      editor: editorContent,
+    };
+
+    inboxDataHandler(data);
+    sentDataHandler(data);
     setShowModal(false);
   };
 
-  const inboxDataHandler = () => {
+  const inboxDataHandler = (data) => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${enteredEmail}.json`,
       {
@@ -56,30 +87,17 @@ function ComposeModal() {
     ).then((res) => {
       if (res.ok) {
         console.log("successfully sent the email");
-        Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: "Successfully sent email",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+
         return res.json();
       } else {
         return res.json().then((data) => {
           console.log("something went wrong ");
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "something went wrong",
-            showConfirmButton: false,
-            timer: 1500,
-          });
         });
       }
     });
   };
 
-  const sentDataHandler = () => {
+  const sentDataHandler = (data) => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`,
       {
@@ -92,24 +110,11 @@ function ComposeModal() {
     ).then((res) => {
       if (res.ok) {
         console.log("Successfully sent email");
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Successfully sent email",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+
         res.json();
       } else {
         return res.json().then((data) => {
           console.log("something went wrong");
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "something went wrong",
-            showConfirmButton: false,
-            timer: 1500,
-          });
         });
       }
     });

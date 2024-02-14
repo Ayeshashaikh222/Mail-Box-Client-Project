@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { HomeActions } from "../Store/HomeSlice";
 
 const Home = () => {
-  // const [unViewedEmailCount, setUnViewedEmailCount] = useState(0);
-
   const showinbox = useSelector((state) => state.home.showInbox);
   const showsent = useSelector((state) => state.home.showSent);
 
@@ -37,15 +35,6 @@ const Home = () => {
           `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
         );
         const data = await response.json();
-        // let unreademailcount = 0;
-
-        // for (const key in data) {
-        //   if (!data[key].viewed) {
-        //     unreademailcount++;
-        //   }
-        // }
-
-        // setUnViewedEmailCount(unreademailcount);
       } catch (error) {
         console.log(error);
       }
@@ -62,7 +51,7 @@ const Home = () => {
         <div className=" flex flex-col  mb-2 bg-slate-200 m-2 w-1/5 h-full p-2 rounded">
           <ComposeModal />
 
-          <div className="flex p-2 m-2 hover:bg-slate-300 rounded">
+          <div className="flex p-2 m-2  hover:bg-slate-300 rounded">
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -199,6 +188,5 @@ const Home = () => {
     </div>
   );
 };
-// setInboxCount={setInboxCount}
 
 export default Home;
