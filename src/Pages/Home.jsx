@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Layout/Header";
+import Header from "../components/Layout/Header";
 import Inbox from "../components/Inbox";
 import SentBox from "../components/SentBox";
 import { Link } from "react-router-dom";
-import ComposeModal from "../Layout/ComposeModal";
+import ComposeModal from "../components/Layout/ComposeModal";
 import { useDispatch, useSelector } from "react-redux";
 import { HomeActions } from "../Store/HomeSlice";
 

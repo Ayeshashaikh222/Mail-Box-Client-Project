@@ -23,15 +23,15 @@ function ComposeModal() {
     setEditorState(e);
   };
 
-  // let enteredEmail = emailInputRef?.current?.value;
-  // enteredEmail = enteredEmail?.replace(/[^a-zA-Z0-9]/g, "");
-  // const enteredSubject = subjectInputRef?.current?.value;
+  let enteredEmail = emailInputRef?.current?.value;
+  enteredEmail = enteredEmail?.replace(/[^a-zA-Z0-9]/g, "");
+  const enteredSubject = subjectInputRef?.current?.value;
 
-  // const data = {
-  //   email: enteredEmail,
-  //   subject: enteredSubject,
-  //   editor: editorState.getCurrentContent().getPlainText(),
-  // };
+  const data = {
+    email: enteredEmail,
+    subject: enteredSubject,
+    editor: editorState.getCurrentContent().getPlainText(),
+  };
 
   const submitHandler = () => {
     // const editorContent = editorState.getCurrentContent().getPlainText();
@@ -47,34 +47,34 @@ function ComposeModal() {
     //   editor: editorState.getCurrentContent().getPlainText(),
     // };
 
-    // inboxDataHandler();
-    // sentDataHandler();
-    // setShowModal(false);
+    inboxDataHandler();
+    sentDataHandler();
+    setShowModal(false);
 
-    const editorContent = editorState.getCurrentContent().getPlainText();
-    const wordCount = editorContent.split(/\s+/).length;
+    // const editorContent = editorState.getCurrentContent().getPlainText();
+    // const wordCount = editorContent.split(/\s+/).length;
 
     // Check if the word count is less than 10
-    if (wordCount < 10) {
-      alert("Please enter at least 10 words in the editor field.");
-      return;
-    }
+    // if (wordCount < 10) {
+    //   alert("Please enter at least 10 words in the editor field.");
+    //   return;
+    // }
 
-    const enteredEmail = emailInputRef?.current?.value;
-    const enteredSubject = subjectInputRef?.current?.value;
+    // const enteredEmail = emailInputRef?.current?.value;
+    // const enteredSubject = subjectInputRef?.current?.value;
 
-    const data = {
-      email: enteredEmail,
-      subject: enteredSubject,
-      editor: editorContent,
-    };
+    // const data = {
+    //   email: enteredEmail,
+    //   subject: enteredSubject,
+    //   editor: editorContent,
+    // };
 
-    inboxDataHandler(data);
-    sentDataHandler(data);
-    setShowModal(false);
+    // inboxDataHandler(data);
+    // sentDataHandler(data);
+    // setShowModal(false);
   };
 
-  const inboxDataHandler = (data) => {
+  const inboxDataHandler = () => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${enteredEmail}.json`,
       {
@@ -97,7 +97,7 @@ function ComposeModal() {
     });
   };
 
-  const sentDataHandler = (data) => {
+  const sentDataHandler = () => {
     fetch(
       `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`,
       {

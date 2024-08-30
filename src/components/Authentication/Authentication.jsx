@@ -40,12 +40,12 @@ const Authentication = () => {
 
     if (isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB3WoU_Kz4oU0npmmPcUAmR5RU01TPol84";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAFMTuLO5f8hk5FXZ7nVuWgmVyEvaQfuEA";
     }
 
     if (!isLogin) {
       url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB3WoU_Kz4oU0npmmPcUAmR5RU01TPol84";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAFMTuLO5f8hk5FXZ7nVuWgmVyEvaQfuEA";
     }
 
     fetch(url, {
@@ -76,7 +76,7 @@ const Authentication = () => {
         console.log("User has successfully signed in");
 
         if (isLogin) {
-          navigate("/successful");
+          navigate("/home");
         }
         emailInputRef.current.value = "";
         passwordInputRef.current.value = "";

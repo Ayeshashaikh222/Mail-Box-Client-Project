@@ -23,7 +23,7 @@ function App() {
 
       {isLoggedIn && (
         <>
-          <Route path="/successful" element={<Successful />} />
+          {/* <Route path="/successful" element={<Successful />} /> */}
           <Route path="/home" element={<Home />} />
           <Route path="/inboxmessage/:Id" element={<InboxEmailDetails />} />
           <Route path="/sentmessage/:Id" element={<SentEmailDetails />} />
