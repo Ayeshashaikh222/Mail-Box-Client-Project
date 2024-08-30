@@ -76,7 +76,7 @@ function ComposeModal() {
 
   const inboxDataHandler = () => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${enteredEmail}.json`,
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/inbox${enteredEmail}.json`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -99,7 +99,7 @@ function ComposeModal() {
 
   const sentDataHandler = () => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`,
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/sent${email}.json`,
       {
         method: "POST",
         body: JSON.stringify(data),

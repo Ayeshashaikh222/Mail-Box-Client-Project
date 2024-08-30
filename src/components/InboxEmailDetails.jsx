@@ -13,7 +13,7 @@ function InboxEmailDetails() {
   const inboxEmailMessage = async () => {
     try {
       const response = await fetch(
-        `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
+        `https://emaildata-7afb4-default-rtdb.firebaseio.com/inbox${email}.json`
       );
       const data = await response.json();
       const fetchedInboxData = [];
@@ -38,7 +38,7 @@ function InboxEmailDetails() {
       const unreademailcount = { ...inboxData, viewed: true };
 
       fetch(
-        `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${Id}.json`,
+        `https://emaildata-7afb4-default-rtdb.firebaseio.com/inbox${email}/${Id}.json`,
         {
           method: "PUT",
           body: JSON.stringify(unreademailcount),

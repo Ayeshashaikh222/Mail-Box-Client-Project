@@ -13,7 +13,7 @@ function SentEmailDetails() {
   const sentEmailMessage = async () => {
     try {
       const response = await fetch(
-        `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`
+        `https://emaildata-7afb4-default-rtdb.firebaseio.com/sent${email}.json`
       );
       const data = await response.json();
       console.log("Fetched Data:", data);

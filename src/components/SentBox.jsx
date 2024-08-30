@@ -13,7 +13,7 @@ function sentBox() {
 
   const fetchsentDataHandler = () => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}.json`
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/sent${email}.json`
     )
       .then((res) => {
         if (res.ok) {
@@ -43,7 +43,7 @@ function sentBox() {
 
   const deleteSentDataHandler = (itemId) => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/sent${email}/${itemId}.json`,
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/sent${email}/${itemId}.json`,
       {
         method: "DELETE",
       }

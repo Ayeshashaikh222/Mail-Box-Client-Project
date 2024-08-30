@@ -16,7 +16,7 @@ function Inbox() {
 
   const fetchInboxDataHandler = () => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}.json`
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/inbox${email}.json`
     )
       .then((res) => {
         if (res.ok) {
@@ -57,7 +57,7 @@ function Inbox() {
 
   const deleteInboxDataHandler = (itemId) => {
     fetch(
-      `https://mail-box-client-auth-data-default-rtdb.firebaseio.com/inbox${email}/${itemId}.json`,
+      `https://emaildata-7afb4-default-rtdb.firebaseio.com/inbox${email}/${itemId}.json`,
       {
         method: "DELETE",
       }
